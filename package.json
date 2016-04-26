@@ -1,0 +1,29 @@
+{
+  "name": "desafiohu1",
+  "version": "1.0.0",
+  "description": "Desafio Hotel Urbano",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felipepmartinez/desafiohu1.git"
+  },
+  "author": "Felipe Martinez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/felipepmartinez/desafiohu1/issues"
+  },
+  "homepage": "https://github.com/felipepmartinez/desafiohu1#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "mysql": "^2.10.2"
+  },
+  "devDependencies": {
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^0.2.3",
+    "karma-jasmine": "^0.3.8"
+  }
+}
