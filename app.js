@@ -107,16 +107,12 @@ app.get('/import', function(req, res) {
 			connection.query('TRUNCATE TABLE hoteis', function(err) {
 				if (err) throw err;
 
-				console.log('Hoteis deletados!');
-
 				var readline = require('readline');
 				var fs = require('fs');
 
 				var rl = readline.createInterface({
 					input: fs.createReadStream('artefatos/hoteis.txt')
 				});
-
-				//var r = fs.createReadStream('artefatos/hoteis.txt');
 
 				var sql_query = 'INSERT INTO hoteis(id, cidade, nome) VALUES ';
 
@@ -126,47 +122,45 @@ app.get('/import', function(req, res) {
 				});
 
 				rl.on('close', function(line) {
-
-					console.log('end hoteis');
 					sql_query = sql_query.substr(0, sql_query.length-1) + ';';
-					console.log(sql_query);
 					connection.query(sql_query, function(err) {
 						if (err) throw err;
-						console.log("Hoteis inseridos");
+						console.log("Hoteis importados");
 					});
 				});
 
 			});
 
-/*			connection.query('TRUNCATE TABLE disponibilidade', function(err) {
+			connection.query('TRUNCATE TABLE disponibilidade', function(err) {
 				if (err) throw err;
 				
-				console.log('Disponibilidades deletadas!');
-
 				var readline = require('readline');
 				var fs = require('fs');
 				
-			//	var rl = readline.createInterface({
-			//		input: fs.createReadStream('artefatos/disp.txt')
-			//	});
-				rl = fs.createReadStream('artefatos/disp.txt');
+				var rl = readline.createInterface({
+					input: fs.createReadStream('artefatos/disp.txt')
+				});
 
 				var sql_query = 'INSERT INTO disponibilidade(id_hotel, data, disponivel) VALUES ';
 
 				rl.on('line', function(line) {
 					values = line.split(",");
+					
+					date = values[1].split("/");
+					values[1] = date[2] + '-' + date[1] + '-' + date[0];
+
 					sql_query = sql_query + "(" + values[0] + ",'" + values[1] + "'," + values[2] + "),";
 				});
 
-				rl.on('end', function(line) {
-					sql_query[sql_query.length-1] = ';';
+				rl.on('close', function(line) {
+					sql_query = sql_query.substr(0, sql_query.length-1) + ';';
 					connection.query(sql_query, function(err) {
 						if (err) throw err;
-						console.log("Disponibilidades inseridas");
+						console.log("Disponibilidades importadas");
 					});
 				});
 
-			});*/
+			});
 		});
 
 		connection.release();
