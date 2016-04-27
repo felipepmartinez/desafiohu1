@@ -79,14 +79,31 @@ app.post('/import', function(req, res) {
 app.get('/select', function(req, res) {
 	console.log('Executando uma query qualquer');
 
+	var local = 'Rio de Janeiro';
+	var dataInicio = '2015-05-01';
+	var dataFim = '2015-05-10';
+
 	pool.getConnection(function(err, connection) {
 		if (err) throw err;
 		connection.query('USE hotelurbano', function(err) {
 			if (err) throw err;
-			connection.query('SELECT * FROM hoteis WHERE 1=1', function(err, rows) {
+
+			sql =   "SELECT * " 
+					+ "FROM	hoteis "
+					+ "WHERE (nome = '" + local + "' OR cidade = '" + local +"') "
+					+ "AND	id IN ("
+					+ "		SELECT id_hotel"
+					+ "		FROM 	disponibilidade"
+					+ "		WHERE	data >= '" + dataInicio + "'"
+					+ "				AND data <= '" + dataFim + "'"
+					+ "				AND disponivel = 1);";
+
+			console.log(sql);
+			connection.query(sql, function(err, rows) {		
 				if (err) throw err;
 				res.send(rows);
 			});
+
 		});
 
 		connection.release();
