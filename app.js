@@ -8,10 +8,11 @@ var mysql 	= require('mysql');
 
 // Application initialization
 
-var connection = mysql.createConnection({
-		host	 : 'localhost',
-		user	 : 'root',
-		password : 'root'
+var pool = mysql.createPool({
+		connectionLimit : 1000,
+		host	 		: 'localhost',
+		user	 		: 'root',
+		password 		: 'root'
 	});
 
 var app = express();
@@ -22,30 +23,35 @@ var app = express();
 
 // Database setup
 
-connection.connect();
+pool.getConnection(function(err, connection) {
+	// connected
 
-connection.query('CREATE DATABASE IF NOT EXISTS hotelurbano', function(err) {
-	if (err) throw err;
-	connection.query('USE hotelurbano', function(err) {
+	connection.query('CREATE DATABASE IF NOT EXISTS hotelurbano', function(err) {
 		if (err) throw err;
-		connection.query('CREATE TABLE IF NOT EXISTS hoteis('
-			+ 'id INT NOT NULL AUTO_INCREMENT,'
-			+ 'cidade VARCHAR(30),'
-			+ 'nome VARCHAR(50),'
-			+ 'PRIMARY KEY(id)'
-			+ ')', function(err) {
-				if (err) throw err;
-			});
-		connection.query('CREATE TABLE IF NOT EXISTS disponibilidade('
-			+ 'id INT NOT NULL AUTO_INCREMENT,'
-			+ 'id_hotel INT NOT NULL REFERENCES hoteis(id),'
-			+ 'data DATE NOT NULL,'
-			+ 'disponivel INT DEFAULT \x270\x27,'		// escape '
-			+ 'PRIMARY KEY(id)'
-			+ ')', function(err) {
-				if (err) throw err;
-			});
+		connection.query('USE hotelurbano', function(err) {
+			if (err) throw err;
+			connection.query('CREATE TABLE IF NOT EXISTS hoteis('
+				+ 'id INT NOT NULL AUTO_INCREMENT,'
+				+ 'cidade VARCHAR(30),'
+				+ 'nome VARCHAR(50),'
+				+ 'PRIMARY KEY(id)'
+				+ ')', function(err) {
+					if (err) throw err;
+				});
+			connection.query('CREATE TABLE IF NOT EXISTS disponibilidade('
+				+ 'id INT NOT NULL AUTO_INCREMENT,'
+				+ 'id_hotel INT NOT NULL REFERENCES hoteis(id),'
+				+ 'data DATE NOT NULL,'
+				+ 'disponivel INT DEFAULT \x270\x27,'		// escape '
+				+ 'PRIMARY KEY(id)'
+				+ ')', function(err) {
+					if (err) throw err;
+				});
+		});
 	});
+
+	connection.release();
+
 });
 
 //connection.end(function(err) {
@@ -67,6 +73,45 @@ app.get('/', function (req, res) {
 
 app.post('/import', function(req, res) {
 	res.send('Import data from artefatos');
+});
+
+// ---------- Select Endpoint
+
+app.get('/select', function(req, res) {
+	console.log('Executando uma query qualquer');
+
+	pool.getConnection(function(err, connection) {
+		if (err) throw err;
+		connection.query('USE hotelurbano', function(err) {
+			if (err) throw err;
+			connection.query('SELECT * FROM hoteis WHERE 1=1', function(err, rows) {
+				if (err) throw err;
+				res.send(rows);
+			});
+		});
+
+		connection.release();
+	});
+
+});
+
+// ---------- Read File Endpoint
+
+app.get('/read', function(req, res) {
+
+	var readline = require('readline');
+	var fs = require('fs');
+
+	var rl = readline.createInterface({
+		input: fs.createReadStream('artefatos/hoteis.txt')
+	});
+
+	rl.on('line', function(line) {
+		console.log(line);
+	});
+
+	res.send('Arquivo lido!');
+
 });
 
 
