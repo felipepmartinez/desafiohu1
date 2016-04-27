@@ -33,18 +33,17 @@ pool.getConnection(function(err, connection) {
 			connection.query('CREATE TABLE IF NOT EXISTS hoteis('
 				+ 'id INT NOT NULL AUTO_INCREMENT,'
 				+ 'cidade VARCHAR(30),'
-				+ 'nome VARCHAR(50),'
+				+ 'nome VARCHAR(70),'
 				+ 'PRIMARY KEY(id)'
 				+ ')', function(err) {
 					if (err) throw err;
 				});
-			connection.query('CREATE TABLE IF NOT EXISTS disponibilidade('
-				+ 'id INT NOT NULL AUTO_INCREMENT,'
-				+ 'id_hotel INT NOT NULL REFERENCES hoteis(id),'
-				+ 'data DATE NOT NULL,'
-				+ 'disponivel INT DEFAULT \x270\x27,'		// escape '
-				+ 'PRIMARY KEY(id)'
-				+ ')', function(err) {
+			connection.query("CREATE TABLE IF NOT EXISTS disponibilidade("
+				+ "id_hotel INT NOT NULL REFERENCES hoteis(id),"
+				+ "data DATE NOT NULL,"
+				+ "disponivel INT DEFAULT '0',"		
+				+ "PRIMARY KEY(id_hotel,data)"
+				+ ")", function(err) {
 					if (err) throw err;
 				});
 		});
@@ -97,21 +96,81 @@ app.get('/select', function(req, res) {
 
 // ---------- Read File Endpoint
 
-app.get('/read', function(req, res) {
+app.get('/import', function(req, res) {
 
-	var readline = require('readline');
-	var fs = require('fs');
+	pool.getConnection(function(err, connection) {
+		if (err) throw err;
 
-	var rl = readline.createInterface({
-		input: fs.createReadStream('artefatos/hoteis.txt')
+		connection.query('USE hotelurbano', function(err) {
+			if (err) throw err;
+			
+			connection.query('TRUNCATE TABLE hoteis', function(err) {
+				if (err) throw err;
+
+				console.log('Hoteis deletados!');
+
+				var readline = require('readline');
+				var fs = require('fs');
+
+				var rl = readline.createInterface({
+					input: fs.createReadStream('artefatos/hoteis.txt')
+				});
+
+				//var r = fs.createReadStream('artefatos/hoteis.txt');
+
+				var sql_query = 'INSERT INTO hoteis(id, cidade, nome) VALUES ';
+
+				rl.on('line', function(line) {
+					values = line.split(",");
+					sql_query = sql_query + "(" + values[0] + ",'" + values[1] + "','" + values[2] + "'),";
+				});
+
+				rl.on('close', function(line) {
+
+					console.log('end hoteis');
+					sql_query = sql_query.substr(0, sql_query.length-1) + ';';
+					console.log(sql_query);
+					connection.query(sql_query, function(err) {
+						if (err) throw err;
+						console.log("Hoteis inseridos");
+					});
+				});
+
+			});
+
+/*			connection.query('TRUNCATE TABLE disponibilidade', function(err) {
+				if (err) throw err;
+				
+				console.log('Disponibilidades deletadas!');
+
+				var readline = require('readline');
+				var fs = require('fs');
+				
+			//	var rl = readline.createInterface({
+			//		input: fs.createReadStream('artefatos/disp.txt')
+			//	});
+				rl = fs.createReadStream('artefatos/disp.txt');
+
+				var sql_query = 'INSERT INTO disponibilidade(id_hotel, data, disponivel) VALUES ';
+
+				rl.on('line', function(line) {
+					values = line.split(",");
+					sql_query = sql_query + "(" + values[0] + ",'" + values[1] + "'," + values[2] + "),";
+				});
+
+				rl.on('end', function(line) {
+					sql_query[sql_query.length-1] = ';';
+					connection.query(sql_query, function(err) {
+						if (err) throw err;
+						console.log("Disponibilidades inseridas");
+					});
+				});
+
+			});*/
+		});
+
+		connection.release();
 	});
-
-	rl.on('line', function(line) {
-		console.log(line);
-	});
-
-	res.send('Arquivo lido!');
-
 });
 
 
