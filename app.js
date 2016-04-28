@@ -4,7 +4,6 @@
 
 var express = require('express');
 var mysql 	= require('mysql'); 
-// ??? instalei o mysql que ficou no msm lugar que o node-mysql, mas dps vi que tinha essa pasta mysql la dentro
 
 // Application initialization
 
@@ -18,8 +17,8 @@ var pool = mysql.createPool({
 var app = express();
 
 
-// Configuration
-// app.use(express.bodyParser());
+// Middleware configuration
+app.use('/static', express.static('static'));
 
 // Database setup
 
@@ -63,16 +62,10 @@ pool.getConnection(function(err, connection) {
 
 // Main route : Hello World
 
-app.get('/', function (req, res) {
-  res.send('Hello World!!');
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/index.html');
 });
 
-
-// Import route : Import data from 'artefatos'
-
-app.post('/import', function(req, res) {
-	res.send('Import data from artefatos');
-});
 
 // ---------- Select Endpoint
 
@@ -98,7 +91,6 @@ app.get('/select', function(req, res) {
 					+ "				AND data <= '" + dataFim + "'"
 					+ "				AND disponivel = 1);";
 
-			console.log(sql);
 			connection.query(sql, function(err, rows) {		
 				if (err) throw err;
 				res.send(rows);

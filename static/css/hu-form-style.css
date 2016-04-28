@@ -1,0 +1,26 @@
+/* enable absolute positioning */
+.inner-addon { 
+	position: relative; 
+}
+
+/* style icon */
+.inner-addon .glyphicon {
+	position: absolute;
+	padding: 10px;
+	pointer-events: none;
+}
+
+/* align icon */
+.left-addon .glyphicon  { left:  0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+    	
+/* shift left */
+.shift-left { padding-left: 15px; }
+
+.shift-down {
+	padding-top: 45px;
+	padding-right: 20px;
+}
+
