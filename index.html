@@ -25,13 +25,17 @@
   	<body>
 
   	<div class="container">
+    <form role="form" id="formBusca">
 
-    <form role="form">
+    <div class="row">
+    	<div class="col-md-offset-1">
+    	<h3> + 1.700 hoteis, pousadas e resorts em todo o mundo</h3>
+		</div>
+	</div>
 
-    <h3>+1.700 hoteis, pousadas e resorts em todo o mundo</h3>
 	<div class="row">
 
-	<div class="form-group col-xs-4">
+	<div class="form-group col-md-4">
 		<label>Quer ficar onde?</label>
 		<div class="inner-addon left-addon">
 			<i class="glyphicon glyphicon-map-marker"></i>
@@ -39,19 +43,19 @@
 		</div>
 	</div>
 
-	<div class="col-xs-8">
+	<div class="col-md-8">
 
 		<label>Quando? (Entrada e Saída)</label>
 		<div class="row" id="divDatas"> <!-- nested row -->
 		
-		<div class="form-group col-xs-4">	
+		<div class="form-group col-md-4">	
 				<div class="inner-addon left-addon">
 					<i class="glyphicon glyphicon-calendar"></i>
 					<input type="text" id="inputEntrada" class="form-control" placeholder="Entrada" />
 				</div>
 		</div>
 
-		<div class="form-group col-xs-4">
+		<div class="form-group col-md-4">
 				<div class="inner-addon left-addon">
 					<i class="glyphicon glyphicon-calendar"></i>
 					<input type="text" id="InputSaida" class="form-control" placeholder="Saída" />
@@ -62,23 +66,36 @@
 		
 		<div class="row">	<!-- nested row -->
 		
-		<div class="form-group col-xs-8">
+		<div class="form-group col-md-8">
     			<label><input id="inputCheckbox" type="checkbox"> Ainda não defini as datas</label>
   			</div>
 		</div>
 		
 		</div> <!-- row -->
 
-	</div> <!-- first row, second column >
-	
+	</div> <!-- first row, second column -->
+
+	<div class="row">
+		<div class="form-group col-md-offset-4 col-md-4" >
+			<button type="button" id="buttonBuscar" class="btn btn-warning">
+			<span class="glyphicon glyphicon-search"></span> Buscar
+			</button>
+		</div>
+	</div>	
 
     </form>
-
 	</div> <!-- container -->
+
+	<div id="listaHoteis">
+
+	</div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="/static/js/jquery-2.2.3.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/static/js/bootstrap.min.js"></script>
+    <!-- Tweak the form and send data to server -->
+    <script src="/static/js/send_data.js"></script>
+
   </body>
 </html>

@@ -20,6 +20,11 @@ var app = express();
 // Middleware configuration
 app.use('/static', express.static('static'));
 
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true }));          // bodyParser.json() ?
+
 // Database setup
 
 pool.getConnection(function(err, connection) {
@@ -52,10 +57,6 @@ pool.getConnection(function(err, connection) {
 
 });
 
-//connection.end(function(err) {
-  // The connection is terminated now
-//});
-
 
 // Connection test
 
@@ -64,6 +65,12 @@ pool.getConnection(function(err, connection) {
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
+});
+
+
+app.post('/receive', function(req, res) {
+	console.log("Veio em receive");
+	console.log(req.body);
 });
 
 
