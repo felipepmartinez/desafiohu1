@@ -19,6 +19,8 @@ $( document ).ready(function() {
 
     	var data = JSON.stringify({"local":$('#inputLocal').val(),"inicio":$('#inputInicio').val(),"fim":$("#inputFim").val()});
 
+    	$('#listaHoteis').empty();
+
     	$.ajax({
     		type: 'POST',
     		data: data,
