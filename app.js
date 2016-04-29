@@ -5,6 +5,11 @@
 var express = require('express');
 var mysql 	= require('mysql'); 
 
+var bodyParser = require('body-parser');
+
+var NodeCache = require('node-cache');
+var cache = new NodeCache();
+
 // Application initialization
 
 var pool = mysql.createPool({
@@ -20,10 +25,10 @@ var app = express();
 // Middleware configuration
 app.use('/static', express.static('static'));
 
-var bodyParser = require('body-parser');
-
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true }));          // bodyParser.json() ?
+
+
 
 // Database setup
 
@@ -61,17 +66,10 @@ pool.getConnection(function(err, connection) {
 // Connection test
 
 
-// Main route : Hello World
+// ----------- Main route 
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
-});
-
-
-app.post('/receive', function(req, res) {
-
-	console.log(req.body);
-	res.json(req.body);
 });
 
 
@@ -85,36 +83,56 @@ app.post('/select', function(req, res) {
 	var dataInicio = req.body["inicio"];
 	var dataFim = req.body["fim"];
 
-	pool.getConnection(function(err, connection) {
+	var cacheKey = local + dataInicio + dataFim;
+	console.log("cache key: ", cacheKey);
+
+	// check if the key is cached
+	cache.get(cacheKey, function(err, result) {
 		if (err) throw err;
-		connection.query('USE hotelurbano', function(err) {
-			if (err) throw err;
 
-			sql =   "SELECT * " 
-					+ "FROM	hoteis "
-					+ "WHERE (nome = '" + local + "' OR cidade = '" + local +"') "
-					+ "AND	id IN ("
-					+ "		SELECT id_hotel"
-					+ "		FROM 	disponibilidade"
-					+ "		WHERE	disponivel = 1";
-			if (dataInicio.length > 0 && dataFim.length > 0)
-				sql = sql + "	AND data >= '" + dataInicio + "'"
-						  + "	AND data <= '" + dataFim + "'";
+		if (result == undefined) {
+			// not in cache: manual search
+    		console.log("Resultado nao encontrado em cache");
 
-			sql = sql + ");";
-
-			console.log(sql);
-
-			connection.query(sql, function(err, rows) {		
+			pool.getConnection(function(err, connection) {
 				if (err) throw err;
-				console.log(rows);
-				
-				res.json(rows);
+				connection.query('USE hotelurbano', function(err) {
+					if (err) throw err;
+
+					sql =   "SELECT * " 
+							+ "FROM	hoteis "
+							+ "WHERE (nome = '" + local + "' OR cidade = '" + local +"') "
+							+ "AND	id IN ("
+							+ "		SELECT id_hotel"
+							+ "		FROM 	disponibilidade"
+							+ "		WHERE	disponivel = 1";
+					if (dataInicio.length > 0 && dataFim.length > 0)
+						sql = sql + "	AND data >= '" + dataInicio + "'"
+								  + "	AND data <= '" + dataFim + "'";
+
+					sql = sql + ");";
+
+					console.log(sql);
+
+					connection.query(sql, function(err, rows) {		
+						if (err) throw err;
+						console.log("rows:",rows);
+						// store new data in cache
+						cache.set(cacheKey, rows);
+						res.json(rows);
+						console.log("enviou");
+					});
+
+				});
+
+				connection.release();
 			});
 
-		});
-
-		connection.release();
+		} else {
+			console.log(result);
+			res.json(result);
+			console.log("enviou dado cacheado");
+		}
 	});
 
 });
