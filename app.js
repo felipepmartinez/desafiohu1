@@ -69,19 +69,21 @@ app.get('/', function(req, res) {
 
 
 app.post('/receive', function(req, res) {
-	console.log("Veio em receive");
+
 	console.log(req.body);
+	res.json(req.body);
 });
 
 
 // ---------- Select Endpoint
 
-app.get('/select', function(req, res) {
-	console.log('Executando uma query qualquer');
+app.post('/select', function(req, res) {
+	
+	console.log(req.body);
 
-	var local = 'Rio de Janeiro';
-	var dataInicio = '2015-05-01';
-	var dataFim = '2015-05-10';
+	var local = req.body["local"];
+	var dataInicio = req.body["inicio"];
+	var dataFim = req.body["fim"];
 
 	pool.getConnection(function(err, connection) {
 		if (err) throw err;
@@ -94,13 +96,20 @@ app.get('/select', function(req, res) {
 					+ "AND	id IN ("
 					+ "		SELECT id_hotel"
 					+ "		FROM 	disponibilidade"
-					+ "		WHERE	data >= '" + dataInicio + "'"
-					+ "				AND data <= '" + dataFim + "'"
-					+ "				AND disponivel = 1);";
+					+ "		WHERE	disponivel = 1";
+			if (dataInicio.length > 0 && dataFim.length > 0)
+				sql = sql + "	AND data >= '" + dataInicio + "'"
+						  + "	AND data <= '" + dataFim + "'";
+
+			sql = sql + ");";
+
+			console.log(sql);
 
 			connection.query(sql, function(err, rows) {		
 				if (err) throw err;
-				res.send(rows);
+				console.log(rows);
+				
+				res.json(rows);
 			});
 
 		});
