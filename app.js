@@ -55,19 +55,21 @@ pool.getConnection(function(err, connection) {
 				+ 'PRIMARY KEY(id)'
 				+ ')', function(err) {
 					if (err) throw err;
-				});
-			connection.query("CREATE TABLE IF NOT EXISTS disponibilidade("
-				+ "id_hotel INT NOT NULL REFERENCES hoteis(id),"
-				+ "data DATE NOT NULL,"
-				+ "disponivel INT DEFAULT '0',"		
-				+ "PRIMARY KEY(id_hotel,data)"
-				+ ")", function(err) {
-					if (err) throw err;
-				});
+
+					connection.query("CREATE TABLE IF NOT EXISTS disponibilidade("
+						+ "id_hotel INT NOT NULL REFERENCES hoteis(id),"
+						+ "data DATE NOT NULL,"
+						+ "disponivel INT DEFAULT '0',"		
+						+ "PRIMARY KEY(id_hotel,data)"
+						+ ")", function(err) {
+							if (err) throw err;
+					
+						connection.release();		
+					});
+			
+			});
 		});
 	});
-
-	connection.release();
 
 });
 
@@ -127,11 +129,13 @@ app.post('/select', function(req, res) {
 						cache.set(cacheKey, rows);
 						res.json(rows);
 						console.log("enviou");
+
+						connection.release();
 					});
 
 				});
 
-				connection.release();
+				
 			});
 
 		} else {
@@ -205,14 +209,16 @@ app.get('/import', function(req, res) {
 					sql_query = sql_query.substr(0, sql_query.length-1) + ';';
 					connection.query(sql_query, function(err) {
 						if (err) throw err;
+
 						console.log("Disponibilidades importadas");
+						connection.release();
 					});
 				});
 
 			});
 		});
 
-		connection.release();
+		
 	});
 });
 
