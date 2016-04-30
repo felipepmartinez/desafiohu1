@@ -1,11 +1,23 @@
 // app.js
 
+var cluster = require('cluster');
+var http = require('http');
+
+var numCPUs =  require('os').cpus().length;
+
+if (cluster.isMaster) {
+	for (var i = 0; i < numCPUs; i++) {
+		cluster.fork();
+	}
+} else {
+
 // Module dependencies
 
 var express = require('express');
 var mysql 	= require('mysql'); 
 
 var bodyParser = require('body-parser');
+
 
 var NodeCache = require('node-cache');
 var cache = new NodeCache();
@@ -21,14 +33,11 @@ var pool = mysql.createPool({
 
 var app = express();
 
-
 // Middleware configuration
 app.use('/static', express.static('static'));
 
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true }));          // bodyParser.json() ?
-
-
+app.use(bodyParser.json()); 
+app.use(bodyParser.urlencoded({ extended: true }));          
 
 // Database setup
 
@@ -61,10 +70,6 @@ pool.getConnection(function(err, connection) {
 	connection.release();
 
 });
-
-
-// Connection test
-
 
 // ----------- Main route 
 
@@ -106,9 +111,10 @@ app.post('/select', function(req, res) {
 							+ "		SELECT id_hotel"
 							+ "		FROM 	disponibilidade"
 							+ "		WHERE	disponivel = 1";
-					if (dataInicio.length > 0 && dataFim.length > 0)
+					if (dataInicio.length > 0 && dataFim.length > 0) {
 						sql = sql + "	AND data >= '" + dataInicio + "'"
 								  + "	AND data <= '" + dataFim + "'";
+					}
 
 					sql = sql + ");";
 
@@ -117,7 +123,7 @@ app.post('/select', function(req, res) {
 					connection.query(sql, function(err, rows) {		
 						if (err) throw err;
 						console.log("rows:",rows);
-						// store new data in cache
+							// store new data in cache
 						cache.set(cacheKey, rows);
 						res.json(rows);
 						console.log("enviou");
@@ -218,3 +224,5 @@ app.listen(3000, function(err) {
 
 
 });
+
+} // end else - workers
