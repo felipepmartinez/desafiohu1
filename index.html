@@ -6,12 +6,16 @@
     	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
     	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    	<title>Bootstrap 101 Template</title>
+    	<title>Hotel Urbano - Reserva de Hotéis</title>
 
     	<!-- Bootstrap -->
     	<link href="/static/css/bootstrap.css" rel="stylesheet">
+    	<!-- JQuery-ui -->
+    	<link href="/static/jquery-ui-1.11.4/jquery-ui.min.css" rel="stylesheet">
 
     	<link href="/static/css/hu-form-style.css" rel="stylesheet">
+
+
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -51,14 +55,14 @@
 		<div class="form-group col-md-4">	
 				<div class="inner-addon left-addon">
 					<i class="glyphicon glyphicon-calendar"></i>
-					<input type="text" id="inputInicio" class="form-control" placeholder="Entrada" />
+					<input type="text" id="inputInicio" class="form-control inputData" placeholder="Entrada" />
 				</div>
 		</div>
 
 		<div class="form-group col-md-4">
 				<div class="inner-addon left-addon">
 					<i class="glyphicon glyphicon-calendar"></i>
-					<input type="text" id="inputFim" class="form-control" placeholder="Saída" />
+					<input type="text" id="inputFim" class="form-control inputData" placeholder="Saída" />
 				</div>
 		</div>
 
@@ -92,8 +96,10 @@
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="/static/js/jquery-2.2.3.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- Bootstrap -->
     <script src="/static/js/bootstrap.min.js"></script>
+    <!-- JQuery-ui lighness theme -->
+    <script src="/static/jquery-ui-1.11.4/jquery-ui.min.js"></script>
     <!-- Tweak the form and send data to server -->
     <script src="/static/js/send_data.js"></script>
 
