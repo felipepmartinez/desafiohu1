@@ -150,6 +150,7 @@ app.post('/suggest', function(req, res) {
 
 	var term = req.body["term"];
 
+	const maxSuggestions = 6;
 	var cacheKey = term;
 
 	// check if the key is cached
@@ -177,7 +178,7 @@ app.post('/suggest', function(req, res) {
 						if (err) throw err;
 						
 						var data = [];
-						for (var i = 0; i < rows.length; i++) {
+						for (var i = 0; i < rows.length && i < maxSuggestions; i++) {
 							data.push(rows[i].cidade);
 						}
 						data = JSON.stringify(data);
