@@ -2,6 +2,20 @@ $( document ).ready(function() {
  
     // se o checkbox ta apertado dataentrada e datasaida recebem null
     // 		+ desativa as caixas
+    $('.alert .close').on('click', function(e) {
+    	$(this).parent().hide();
+	});
+
+
+	ALERT = {
+		show: function(message) {
+			$("#alertMessage").html("<strong>Erro!</strong> "+message);
+			$("#alert").show();
+			window.setTimeout(function () {
+       			$("#alert").hide();
+    		}, 2000);
+		}
+	}
 
     $("#inputLocal").autocomplete({
     	source: function(request, response) {
@@ -41,12 +55,12 @@ $( document ).ready(function() {
     						"fim":$("#inputFim").val() });
 
     	if ($('#inputInicio').val() > $('#inputFim').val()) {
-    		alert("A data de entrada deve ser menor que a de saída!");
+    		ALERT.show("A data de entrada deve ser anterior à da saída!");
     		return;
     	}
 
     	if ($("#inputLocal").val() == '') {
-    		alert("É preciso entrar com um valor para o local!");
+    		ALERT.show("É preciso inserir um destino!");
     		return;
     	}
 
