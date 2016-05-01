@@ -3,34 +3,33 @@ $( document ).ready(function() {
     // se o checkbox ta apertado dataentrada e datasaida recebem null
     // 		+ desativa as caixas
 
+    $("#inputLocal").autocomplete({
+    	source: function(request, response) {
+    		$.ajax({
+            	type: 'POST',
+            	data: { term: request.term },
+            	dataType: 'text',
+            	url: "http://localhost:3000/suggest",
+                success: function (data)
+            	{
+            		var out = $.parseJSON(data);
+					response(out);
+            	}
+        	});
+    	}
+    });
+
  	$(".inputData").datepicker({
  		dateFormat: 'yy-mm-dd',
  		defaultDate: '-1y'
  	});
 
- 	/** nao funciona de jeito nenhum
+    $("#inputCheckbox").click(function() {
 
- 	$("#inputInicio").datepicker({
- 		onClose: function(selectedDate) {
-        	alert("entrou");
-        	$("#inputFim").datepicker("option", "minDate", selectedDate);
-      	}
-    });
-
- 	$("#inputFim").datepicker({
- 		onClose: function(selectedDate) {
-        	$("#inputInicio").datepicker("option", "maxDate", selectedDate);
-      	}
-    });
-	
-	**/
-
-    $('#inputCheckbox').click(function() {
-
-    	$('.inputData').attr('disabled', this.checked);
+    	$(".inputData").attr("disabled", this.checked);
 
     	if (this.checked) {
-    		$('#inputData').val('');
+    		$("#inputData").val('');
     	}
 
 	});
@@ -50,6 +49,7 @@ $( document ).ready(function() {
     		alert("É preciso entrar com um valor para o local!");
     		return;
     	}
+
 
     	$('#listaHoteis').empty();
 

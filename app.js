@@ -147,6 +147,50 @@ app.post('/select', function(req, res) {
 
 });
 
+// ---------- Suggest Local Endpoint
+
+app.post('/suggest', function(req, res) {
+
+	var term = req.body["term"];
+
+	pool.getConnection(function(err, connection) {
+		if (err) throw err;
+		connection.query('USE hotelurbano', function(err) {
+			if (err) throw err;
+
+			sql = "SELECT cidade " 
+				+ "FROM	hoteis "
+				+ "WHERE cidade LIKE CONCAT('" + term + "', '%') UNION "
+				+ "SELECT nome " 
+				+ "FROM	hoteis "
+				+ "WHERE nome LIKE CONCAT('" + term + "', '%');";
+
+			console.log(sql);
+			connection.query(sql, function(err, rows) {		
+				if (err) throw err;
+				
+				console.log("rows:",rows);
+				// store new data in cache
+				//		cache.set(cacheKey, rows);
+				
+				var data = [];
+				for (var i = 0; i < rows.length; i++) {
+					data.push(rows[i].cidade);
+				}
+				res.end(JSON.stringify(data));
+
+				connection.release();
+			});
+
+		});
+
+				
+	});
+
+	//res.end(JSON.stringify(["a","b","c"]));
+
+});
+
 // ---------- Read File Endpoint
 
 app.get('/import', function(req, res) {
