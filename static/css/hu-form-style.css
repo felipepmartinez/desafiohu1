@@ -15,4 +15,12 @@
 
 /* add padding  */
 .left-addon input  { padding-left:  30px; }
-    	
+
+/* header color */
+.header-color {
+	color: rgb(64,191,251);
+}
+    
+.header-image {
+	background-color: rgb(64,191,251);
+}	
