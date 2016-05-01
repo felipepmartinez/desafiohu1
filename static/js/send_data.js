@@ -79,7 +79,7 @@ $( document ).ready(function() {
     			
     			$(data).each(function(index, value) {
     				console.log(value["nome"]); 
-    				$("#listaHoteis").append("<li>"+value["nome"]+", "+value["cidade"]+"</li>");
+    				$("#listaHoteis").append('<li class="list-group-item">'+value["nome"]+", "+value["cidade"]+"</li>");
     			});
     		},
     		error: function(err) {
