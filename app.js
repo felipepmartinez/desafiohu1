@@ -84,14 +84,11 @@ app.get('/', function(req, res) {
 
 app.post('/select', function(req, res) {
 	
-	console.log(req.body);
-
 	var local = req.body["local"];
 	var dataInicio = req.body["inicio"];
 	var dataFim = req.body["fim"];
 
 	var cacheKey = local + dataInicio + dataFim;
-	console.log("cache key: ", cacheKey);
 
 	// check if the key is cached
 	cache.get(cacheKey, function(err, result) {
@@ -120,7 +117,7 @@ app.post('/select', function(req, res) {
 
 					sql = sql + ");";
 
-					console.log(sql);
+					//console.log(sql);
 
 					connection.query(sql, function(err, rows) {		
 						if (err) throw err;
@@ -153,41 +150,56 @@ app.post('/suggest', function(req, res) {
 
 	var term = req.body["term"];
 
-	pool.getConnection(function(err, connection) {
+	var cacheKey = term;
+
+	// check if the key is cached
+	cache.get(cacheKey, function(err, result) {
 		if (err) throw err;
-		connection.query('USE hotelurbano', function(err) {
-			if (err) throw err;
 
-			sql = "SELECT cidade " 
-				+ "FROM	hoteis "
-				+ "WHERE cidade LIKE CONCAT('" + term + "', '%') UNION "
-				+ "SELECT nome " 
-				+ "FROM	hoteis "
-				+ "WHERE nome LIKE CONCAT('" + term + "', '%');";
+		if (result == undefined) {
+			// not in cache: manual search
+    		console.log("Resultado nao encontrado em cache");
 
-			console.log(sql);
-			connection.query(sql, function(err, rows) {		
+			pool.getConnection(function(err, connection) {
 				if (err) throw err;
-				
-				console.log("rows:",rows);
-				// store new data in cache
-				//		cache.set(cacheKey, rows);
-				
-				var data = [];
-				for (var i = 0; i < rows.length; i++) {
-					data.push(rows[i].cidade);
-				}
-				res.end(JSON.stringify(data));
+				connection.query('USE hotelurbano', function(err) {
+					if (err) throw err;
 
-				connection.release();
+					sql = "SELECT cidade " 
+						+ "FROM	hoteis "
+						+ "WHERE cidade LIKE CONCAT('" + term + "', '%') UNION "
+						+ "SELECT nome " 
+						+ "FROM	hoteis "
+						+ "WHERE nome LIKE CONCAT('" + term + "', '%');";
+
+					console.log(sql);
+					connection.query(sql, function(err, rows) {		
+						if (err) throw err;
+						
+						var data = [];
+						for (var i = 0; i < rows.length; i++) {
+							data.push(rows[i].cidade);
+						}
+						data = JSON.stringify(data);
+						
+						// store new data in cache
+						cache.set(cacheKey, data);
+
+						res.end(data);
+						connection.release();
+					});
+
+				});
 			});
 
-		});
+		} else {
 
+			console.log(result);
+			res.end(result);
+			console.log("enviou dado cacheado");
+		}
 				
 	});
-
-	//res.end(JSON.stringify(["a","b","c"]));
 
 });
 
