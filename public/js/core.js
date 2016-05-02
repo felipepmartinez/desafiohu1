@@ -79,12 +79,13 @@ $( document ).ready(function() {
     		dataType: 'json',
     		url: "http://localhost:3000/select",
     		success: function (data) {
-    			data = JSON.parse(JSON.stringify(data));
-    			
-    			if (data == "[]") {
+
+    			var res = JSON.parse(JSON.stringify(data));
+
+    			if (res == "[]" || res == "") {
     				$("#listaHoteis").append('<li class="list-group-item"> Sem resultados! </li>');
     			} else {
-    				$(data).each(function (index, value) {
+    				$(res).each(function (index, value) {
 	    			    $("#listaHoteis").append('<li class="list-group-item">'+value["nome"]+", "+value["cidade"]+"</li>");
 	    			});
     			}
