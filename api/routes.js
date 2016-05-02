@@ -101,6 +101,7 @@ module.exports = function (app, database) {
 				// not in cache: manual search
 				database.getConnection(function (err, connection) {
 					if (err) throw err;
+
 					connection.query('USE hotelurbano', function (err) {
 						if (err) throw err;
 
@@ -123,6 +124,7 @@ module.exports = function (app, database) {
 							// store new data in cache
 							cache.set(cacheKey, rows);
 
+							res.json(rows);
 							connection.release();
 						});
 
@@ -166,7 +168,6 @@ app.post('/suggest', function(req, res) {
 						+ "FROM	hoteis "
 						+ "WHERE nome LIKE CONCAT('" + term + "', '%');";
 
-					console.log(sql);
 					connection.query(sql, function (err, rows) {		
 						if (err) throw err;
 						

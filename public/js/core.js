@@ -2,27 +2,27 @@ $( document ).ready(function() {
  
     // se o checkbox ta apertado dataentrada e datasaida recebem null
     // 		+ desativa as caixas
-    $('.alert .close').on('click', function(e) {
+    $('.alert .close').on('click', function () {
     	$(this).parent().hide();
 	});
 
 
 	ALERT = {
-		show: function(message) {
+		show: function (message) {
 			$("#alertMessage").html("<strong>Erro!</strong> "+message);
 			$("#alert").show();
 			window.setTimeout(function () {
        			$("#alert").hide();
-    		}, 1500);
+    		}, 1200);
 		}
 	}
 
-	 $("#inputLocal").on('focus', function(){
+	 $("#inputLocal").on('focus', function (){
 	 	$("#inputLocal").val('');
 	 })
 
     $("#inputLocal").autocomplete({
-    	source: function(request, response) {
+    	source: function (request, response) {
     		$.ajax({
             	type: 'POST',
             	data: { term: request.term },
@@ -47,12 +47,14 @@ $( document ).ready(function() {
     	$(".inputData").attr("disabled", this.checked);
 
     	if (this.checked) {
-    		$("#inputData").val('');
+    		$(".inputData").val('');
     	}
 
 	});
 
  	$("#buttonBuscar").click(function() {
+
+        $("#buttonBuscar").attr("disabled","disabled");
 
     	var data = JSON.stringify({"local":$('#inputLocal').val(),
     						"inicio":$('#inputInicio').val(),
@@ -68,7 +70,6 @@ $( document ).ready(function() {
     		return;
     	}
 
-
     	$('#listaHoteis').empty();
 
     	$.ajax({
@@ -77,24 +78,20 @@ $( document ).ready(function() {
     		contentType: "application/json",
     		dataType: 'json',
     		url: "http://localhost:3000/select",
-    		success: function(data) {
+    		success: function (data) {
     			data = JSON.parse(JSON.stringify(data));
-    			console.log(data.length);
-    			console.log(data);
     			
     			if (data == "[]") {
     				$("#listaHoteis").append('<li class="list-group-item"> Sem resultados! </li>');
     			} else {
-    				$(data).each(function(index, value) {
-	    				$("#listaHoteis").append('<li class="list-group-item">'+value["nome"]+", "+value["cidade"]+"</li>");
+    				$(data).each(function (index, value) {
+	    			    $("#listaHoteis").append('<li class="list-group-item">'+value["nome"]+", "+value["cidade"]+"</li>");
 	    			});
     			}
-    		},
-    		error: function(err) {
-    			console.log("Cliente nao recebeu nada!");
+
+                $("#buttonBuscar").removeAttr("disabled");
     		}
-    	});
+	    });
 
-	});
-
+    });
 });
