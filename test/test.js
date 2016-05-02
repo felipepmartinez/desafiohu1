@@ -1,16 +1,10 @@
-// test.js
+var assert = require('chai').assert;
 
-var should = require('chai').should();
-var expect = require('chai').expect;
-var request = require('supertest');
-var app = require('../main');
-
-
-// test main route
-
-describe("Candies", function() {
-	it("should return a 200 response", function(done) {
-    	request(app).get("/")
-    		.expect(200, done);
-  	});
+describe('Array', function() {
+  describe('#indexOf()', function () {
+    it('should return -1 when the value is not present', function () {
+      assert.equal(-1, [1,2,3].indexOf(5));
+      assert.equal(-1, [1,2,3].indexOf(0));
+    });
+  });
 });
