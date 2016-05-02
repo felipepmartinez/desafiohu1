@@ -54,8 +54,6 @@ $( document ).ready(function() {
 
  	$("#buttonBuscar").click(function() {
 
-        $("#buttonBuscar").attr("disabled","disabled");
-
     	var data = JSON.stringify({"local":$('#inputLocal').val(),
     						"inicio":$('#inputInicio').val(),
     						"fim":$("#inputFim").val() });
@@ -71,6 +69,8 @@ $( document ).ready(function() {
     	}
 
     	$('#listaHoteis').empty();
+
+        $("#buttonBuscar").attr("disabled","disabled");
 
     	$.ajax({
     		type: 'POST',
@@ -88,10 +88,10 @@ $( document ).ready(function() {
 	    			    $("#listaHoteis").append('<li class="list-group-item">'+value["nome"]+", "+value["cidade"]+"</li>");
 	    			});
     			}
-
-                $("#buttonBuscar").removeAttr("disabled");
     		}
 	    });
+
+        $("#buttonBuscar").removeAttr("disabled");
 
     });
 });
