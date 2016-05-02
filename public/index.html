@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  	<head>
+    	<meta charset="utf-8">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    	<title>Hotel Urbano - Busca de Hotéis</title>
+
+    	<!-- Bootstrap -->
+    	<link href="/public/css/bootstrap.css" rel="stylesheet">
+    	<!-- JQuery-ui -->
+    	<link href="/public/jquery-ui-1.11.4/jquery-ui.min.css" rel="stylesheet">
+
+    	<link href="/public/css/hu-form-style.css" rel="stylesheet">
+  	</head>
+
+  	<body>
+
+  	<div class="container">
+
+  	<div class="alert alert-danger fade in" id="alert" style="display:none;">
+    	<div id=alertMessage></div>
+  	</div>
+
+    <form role="form" id="formBusca">
+
+    <div class="row header-image" align="center">
+    	<img src="/public/images/header.png">
+    </div>
+
+    <div class="row">
+    	<div class="header-color" align="center">
+    	<h3 > + 1.700 hoteis, pousadas e resorts em todo o mundo</h3>
+		</div>
+	</div>
+
+	<div class="row" id="form">
+
+	<div class="form-group col-md-3 col-md-offset-1">
+		<label >Quer ficar onde?</label>
+		<div class="inner-addon left-addon">
+			<i class="glyphicon glyphicon-map-marker"></i>
+			<input type="text" id="inputLocal" class="form-control" placeholder="Cidade ou Hotel" />
+		</div>
+	</div>
+
+	<div class="col-md-8">
+
+		<label>Quando? (Entrada e Saída)</label>
+		<div class="row" id="divDatas"> <!-- nested row -->
+		
+		<div class="form-group col-md-4">	
+				<div class="inner-addon left-addon">
+					<i class="glyphicon glyphicon-calendar"></i>
+					<input type="text" id="inputInicio" class="form-control inputData" placeholder="Entrada" />
+				</div>
+		</div>
+
+		<div class="form-group col-md-4">
+				<div class="inner-addon left-addon">
+					<i class="glyphicon glyphicon-calendar"></i>
+					<input type="text" id="inputFim" class="form-control inputData" placeholder="Saída" />
+				</div>
+		</div>
+
+		</div> <!-- row -->
+		
+		<div class="row">	<!-- nested row -->
+		
+		<div class="form-group col-md-8">
+    			<label><input id="inputCheckbox" type="checkbox"> Ainda não defini as datas</label>
+  			</div>
+		</div>
+		
+		</div> <!-- row -->
+
+	</div> <!-- first row, second column -->
+
+	<div class="row">
+		<div class="form-group col-md-offset-4 col-md-4" >
+			<button type="button" id="buttonBuscar" class="btn btn-warning btn-lg">
+			<span class="glyphicon glyphicon-search"></span> Buscar
+			</button>
+		</div>
+	</div>	
+
+    </form>
+
+    <div id="listaHoteis" class="list-group" align="center">
+
+	</div>
+
+
+	</div> <!-- container -->
+
+	
+	
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/public/js/jquery-2.2.3.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="/public/js/bootstrap.min.js"></script>
+    <!-- JQuery-ui lighness theme -->
+    <script src="/public/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+    <!-- Tweak the form and send data to server -->
+    <script src="/public/js/core.js"></script>
+
+  </body>
+</html>
