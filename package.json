@@ -18,8 +18,10 @@
   "homepage": "https://github.com/felipepmartinez/desafiohu1#readme",
   "dependencies": {
     "body-parser": "^1.15.0",
+    "chai": "^3.5.0",
     "cluster": "^0.7.7",
     "express": "^4.13.4",
+    "mocha": "^2.4.5",
     "mysql": "^2.10.2",
     "node-cache": "^3.2.1"
   },

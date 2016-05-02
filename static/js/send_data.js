@@ -13,9 +13,13 @@ $( document ).ready(function() {
 			$("#alert").show();
 			window.setTimeout(function () {
        			$("#alert").hide();
-    		}, 2000);
+    		}, 1500);
 		}
 	}
+
+	 $("#inputLocal").on('focus', function(){
+	 	$("#inputLocal").val('');
+	 })
 
     $("#inputLocal").autocomplete({
     	source: function(request, response) {
@@ -74,13 +78,17 @@ $( document ).ready(function() {
     		dataType: 'json',
     		url: "http://localhost:3000/select",
     		success: function(data) {
-    			//console.log(data);
-    			console.log("Cliente recebeu os dados!");
+    			data = JSON.parse(JSON.stringify(data));
+    			console.log(data.length);
+    			console.log(data);
     			
-    			$(data).each(function(index, value) {
-    				console.log(value["nome"]); 
-    				$("#listaHoteis").append('<li class="list-group-item">'+value["nome"]+", "+value["cidade"]+"</li>");
-    			});
+    			if (data == "[]") {
+    				$("#listaHoteis").append('<li class="list-group-item"> Sem resultados! </li>');
+    			} else {
+    				$(data).each(function(index, value) {
+	    				$("#listaHoteis").append('<li class="list-group-item">'+value["nome"]+", "+value["cidade"]+"</li>");
+	    			});
+    			}
     		},
     		error: function(err) {
     			console.log("Cliente nao recebeu nada!");

@@ -136,9 +136,9 @@ app.post('/select', function(req, res) {
 			});
 
 		} else {
-			console.log(result);
+			//console.log(result);
 			res.json(result);
-			console.log("enviou dado cacheado");
+			//console.log("enviou dado cacheado");
 		}
 	});
 
@@ -195,9 +195,9 @@ app.post('/suggest', function(req, res) {
 
 		} else {
 
-			console.log(result);
+			//console.log(result);
 			res.end(result);
-			console.log("enviou dado cacheado");
+			//console.log("enviou dado cacheado");
 		}
 				
 	});
