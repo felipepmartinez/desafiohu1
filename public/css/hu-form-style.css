@@ -1,0 +1,26 @@
+/* enable absolute positioning */
+.inner-addon { 
+	position: relative; 
+}
+
+/* style icon */
+.inner-addon .glyphicon {
+	position: absolute;
+	padding: 10px;
+	pointer-events: none;
+}
+
+/* align icon */
+.left-addon .glyphicon  { left:  0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+
+/* header colorstyle */
+.header-color {
+	color: rgb(64,191,251);
+}
+    
+.header-image {
+	background-color: rgb(64,191,251);
+}	
